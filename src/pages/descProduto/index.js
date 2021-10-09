@@ -1,44 +1,48 @@
-// import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Cookie from 'js-cookie'
+import { useState } from "react";
+
+
 import styled from "styled-components";
 
-const Container = styled.div`
+    const Container = styled.div`
 
-`;
+    `;
+
+
 
 export default function DetalhesProduto(props){
 
-    const produto = props.location.state
+    const [produto, setProduto] = useState(props.location.state)
 
-    function Compra(){
-        let carrinho = Cookie.get('carrinho')
-
-        console.log(carrinho)
+    let navigation = useHistory()
 
 
-        // if(carrinho !== undefined){
-        //     carrinho = JSON.parse(carrinho)
-        //     console.log(carrinho)
+        function Compra(){
 
-        // } else{
-        //     carrinho = []
-        // }
+            // Cookie.remove('Carrinho');
+            let carrinho = Cookie.get('Carrinho')
+            
 
-        carrinho = carrinho !== undefined
-                            ? carrinho = JSON.parse(carrinho)
-                            : carrinho = []
-
-                            console.log(carrinho)
+            carrinho = carrinho === undefined
+                                    ? []
+                                    : JSON.parse(carrinho)
 
 
-        let ProdutoAdd = carrinho.some( (item) => item.id === produto.id )
+            let ProdutoAdd = carrinho.some( (item) => item.id === produto.id )
+            if( ProdutoAdd === false ){
+                carrinho.push({...produto, qtd: 1})
+                // console.log("opa" + carrinho)
+            }
 
-        if( ProdutoAdd === false ){
-            carrinho.push({...produto, qtd: 1})
+            // console.log(carrinho)
+
+            carrinho = JSON.stringify(carrinho)
+            Cookie.set('Carrinho', carrinho)
+
+            navigation.push('/carrinho')
+
         }
-
-
-    }
 
 
     return(
